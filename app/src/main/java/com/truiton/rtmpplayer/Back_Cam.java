@@ -53,7 +53,7 @@ public class Back_Cam extends AppCompatActivity  {
     private int mVideoWidth;
     private int mVideoHeight;
     WifiManager wifiManager;
-// got that commit ??
+// got that commit changed name 
 
     private TextView mName;
     private TextView frontCam;
@@ -103,7 +103,7 @@ public class Back_Cam extends AppCompatActivity  {
                             }
                         });
                     }
-                } catch (InterruptedException e) {
+                }catch (InterruptedException e) {
                 }
             }
         };
