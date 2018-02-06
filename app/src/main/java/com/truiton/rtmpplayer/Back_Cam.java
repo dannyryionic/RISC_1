@@ -53,7 +53,7 @@ public class Back_Cam extends AppCompatActivity  {
     private int mVideoWidth;
     private int mVideoHeight;
     WifiManager wifiManager;
-
+// got that commit ??
 
     private TextView mName;
     private TextView frontCam;
@@ -80,7 +80,7 @@ public class Back_Cam extends AppCompatActivity  {
         mName.setText(name);
 
 
-        rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov
+       // rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov
         mSurface = (SurfaceView) findViewById(R.id.surfaceView);
         holder = mSurface.getHolder();
 
