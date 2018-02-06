@@ -24,7 +24,7 @@ public class Splash extends Activity {
                 /* Create an Intent that will start the Main-Activity. */
                 Intent mainIntent = new Intent(Splash.this,MainActivity.class);
                 Splash.this.startActivity(mainIntent);
-                Splash.this.finish(); 
+                Splash.this.finish();
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
