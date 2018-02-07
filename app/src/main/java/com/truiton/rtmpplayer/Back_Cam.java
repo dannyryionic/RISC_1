@@ -42,6 +42,7 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class Back_Cam extends AppCompatActivity  {
@@ -53,7 +54,7 @@ public class Back_Cam extends AppCompatActivity  {
     private int mVideoWidth;
     private int mVideoHeight;
     WifiManager wifiManager;
-// got that commit changed name 
+
 
     private TextView mName;
     private TextView frontCam;
@@ -71,7 +72,8 @@ public class Back_Cam extends AppCompatActivity  {
         frontCam.setBackgroundColor(Color.parseColor("#50000000"));
 //retieve the text input from then IpPreferance class to the front_cam class
         SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
-        mFilePath = "rtsp://"+prefs.getString(getString(R.string.name), "")+":8090/back";
+        mFilePath = "rtsp://"+prefs.getString(getString(R.string.name), "");
+                //+":8090/back";
         // free rtssp stream 184.72.239.149/vod/mp4:BigBuckBunny_175k.mov");
 //pass the font IP address to the left of the screen
         mName = (TextView) findViewById(R.id.etName_SL);
@@ -80,7 +82,7 @@ public class Back_Cam extends AppCompatActivity  {
         mName.setText(name);
 
 
-       // rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov
+        rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov
         mSurface = (SurfaceView) findViewById(R.id.surfaceView);
         holder = mSurface.getHolder();
 
@@ -103,7 +105,7 @@ public class Back_Cam extends AppCompatActivity  {
                             }
                         });
                     }
-                }catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                 }
             }
         };
@@ -117,14 +119,12 @@ public class Back_Cam extends AppCompatActivity  {
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             final ImageButton button1= (ImageButton) findViewById(R.id.refresh);
-            final ImageButton button2=(ImageButton)findViewById(R.id.settings);
             final ImageButton button3=(ImageButton)findViewById(R.id.cameraswitch);
             final TextView textView=(TextView) findViewById(R.id.frontCam);
             final TextView textView1=(TextView) findViewById(R.id.etName_SL);
             final TextView textView2=(TextView) findViewById(R.id.clock);
 
             button1.setVisibility(View.INVISIBLE);
-            button2.setVisibility(View.INVISIBLE);
             button3.setVisibility(View.INVISIBLE);
             textView.setVisibility(View.INVISIBLE);
             textView1.setVisibility(View.INVISIBLE);
@@ -133,14 +133,12 @@ public class Back_Cam extends AppCompatActivity  {
         }
         else if(event.getAction() == MotionEvent.ACTION_UP) {
             final ImageButton button1= (ImageButton) findViewById(R.id.refresh);
-            final ImageButton button2=(ImageButton)findViewById(R.id.settings);
             final ImageButton button3=(ImageButton)findViewById(R.id.cameraswitch);
             final TextView textView=(TextView) findViewById(R.id.frontCam);
             final TextView textView1=(TextView) findViewById(R.id.etName_SL);
             final TextView textView2=(TextView) findViewById(R.id.clock);
 
             button1.setVisibility(View.VISIBLE);
-            button2.setVisibility(View.VISIBLE);
             button3.setVisibility(View.VISIBLE);
             textView.setVisibility(View.VISIBLE);
             textView1.setVisibility(View.VISIBLE);
@@ -172,7 +170,7 @@ public class Back_Cam extends AppCompatActivity  {
     //to disable the baclbutton on device
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this,Front_Cam.class);
+        Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
 
         System.exit(0);
@@ -268,7 +266,43 @@ public class Back_Cam extends AppCompatActivity  {
 
     }
 
+    public void takeScreenshot(View view) {
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
+        try {
+            // image naming and path  to include sd card  appending name you choose for file
+            String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
+
+            // create bitmap screen capture
+            View view1 = getWindow().getDecorView().getRootView();
+            view1.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(view1.getDrawingCache());
+            view1.setDrawingCacheEnabled(false);
+            Canvas canvas = new Canvas(bitmap);
+            view1.draw(canvas);
+            File imageFile = new File(mPath);
+
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+            openScreenshot(imageFile);
+        } catch (Throwable e) {
+            // Several error may come out with file handling or DOM
+            e.printStackTrace();
+        }
+    }
+
+    private void openScreenshot(File imageFile) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(imageFile);
+        intent.setDataAndType(uri, "image/*");
+        startActivity(intent);
+    }
     private static class MyPlayerListener implements MediaPlayer.EventListener {
         private WeakReference<Back_Cam> mOwner;
 
